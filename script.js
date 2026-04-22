@@ -219,15 +219,9 @@ class LoadingScreen extends Phaser.Scene{
             },
             repeat: -1,
         })
-
-
-        
-
-
         
         this.ellipsesCounter = 0;
         this.ellipsesEvent = this.time.addEvent({ delay: 1000, callback: this.ellipsesUpdate, callbackScope: this, loop: true});
-        
         
     }
 
