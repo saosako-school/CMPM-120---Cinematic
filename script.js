@@ -183,6 +183,7 @@ class LoadingScreen extends Phaser.Scene{
                 colorEnd: .transparent(), //make color object of peach that turns transparent
             }]
         })*/
+       //trying to fix something
 
         this.loading = this.add.text(
             325, 
