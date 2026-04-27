@@ -1,3 +1,18 @@
+class Start extends Phaser.Scene{
+    constructor(){
+        super("start");
+    }
+    peload() {}
+    create() {
+        let space = this.add.text(160, 300, 'Press space to start', {font: '40px Arial', color: '#ffffff'});
+        this.input.keyboard.on('keydown-SPACE', () =>
+            this.scene.start('logoScene')
+        )
+    }
+    update() {
+    }
+}
+
 class LogoScene extends Phaser.Scene{
     constructor() {
         super("logoScene");
@@ -6,26 +21,21 @@ class LogoScene extends Phaser.Scene{
     preload() {
         this.load.path = 'assets/';
         this.load.image('baseball', 'Peach.png'); //change this to a baseball later
+        this.load.path = 'sounds/';
+        this.load.audio('thud', 'thud-sfx.mp3');
     }
 
     create() {
         let baseball = this.add.image(-100, 200, 'baseball');
         baseball.setScale(0.08);
-        let text = this.add.text(160, 360, 'D   N BABES', {font: '80px Arial', color: '#ffffff'});
-        text.setAlpha(0);
-        let text2 = this.add.text(105, 450, 'PRODUCTIONS', {font: '80px Arial', color: '#ffffff'});
-        text2.setAlpha(0);
+        let logoText = this.add.text(160, 360, 'D   N BABES', {font: '80px Arial', color: '#ffffff'});
+        logoText.setAlpha(0);
+        let productions = this.add.text(105, 450, 'PRODUCTIONS', {font: '80px Arial', color: '#ffffff'});
+        productions.setAlpha(0);
+        let thud = this.sound.add('thud');
 
         this.tweens.add({
-            targets: text,
-            delay: 3000,
-            alpha: {from: 0, to: 1},
-            duration: 1000
-
-        })
-
-        this.tweens.add({
-            targets: text2,
+            targets: [logoText, productions],
             delay: 3000,
             alpha: {from: 0, to: 1},
             duration: 1000
@@ -46,13 +56,21 @@ class LogoScene extends Phaser.Scene{
                 },
             ],
         });
+
+        this.time.delayedCall(900, this.playSound, [thud], this);
+        this.time.delayedCall(7000, this.newScene, [], this);
     }
 
-    update(time) {
-        if (time > 7000) {
-            this.scene.start("startScreen");
-        }
+    update() {}
+
+    playSound(noise) {
+        noise.play();
     }
+
+    newScene() {
+        this.scene.start('startScreen');
+    }
+
 }
 
 class StartScreen extends Phaser.Scene{
@@ -123,17 +141,16 @@ class StartScreen extends Phaser.Scene{
             delay: 4200,
             duration: 5000,
             alpha: 1,
-
         })
 
-        
+        this.time.delayedCall(9200, this.switchScene, [], this);
     }
 
-    update(time) {
-        if (time > 17200) {
-        this.scene.start("loadingScreen");
-        }
+    switchScene() {
+        this.scene.start('loadingScreen');
     }
+
+    update() {}
 }
 
 class LoadingScreen extends Phaser.Scene{
@@ -145,6 +162,8 @@ class LoadingScreen extends Phaser.Scene{
         this.load.path = "assets/";
         this.load.image("fireplace", "Firepit.png"); //firepit
         this.load.image("smoke", "Smoke.png"); //smoke
+        this.load.path = 'sounds/';
+        this.load.audio("fire", "fire.mp3");
     }
 
     create() {
@@ -155,6 +174,8 @@ class LoadingScreen extends Phaser.Scene{
         this.fireplace.setScale(2);
         this.smoke = this.add.image(390, 100, "smoke");
         this.smoke.setScale(1);
+        let fireSound = this.sound.add('fire');
+        fireSound.play({loop: true,})
 
         /*this.gradientMap = this.smoke.enableFilters().filters.internal.addGradientMap({
             ramp:[{
@@ -245,9 +266,10 @@ let config = {
     type: Phaser.WEBGL,
     width: 800,
     height: 600,
+    parent: 'root',
     backgroundColor: '#7A91EA',
     pixelArt: true,
-    scene: [LogoScene, StartScreen, LoadingScreen],
+    scene: [Start, LogoScene, StartScreen, LoadingScreen],
 }
 
 let game = new Phaser.Game(config);
