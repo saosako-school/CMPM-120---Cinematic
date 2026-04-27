@@ -266,7 +266,6 @@ let config = {
     type: Phaser.WEBGL,
     width: 800,
     height: 600,
-    parent: 'root',
     backgroundColor: '#7A91EA',
     pixelArt: true,
     scene: [Start, LogoScene, StartScreen, LoadingScreen],
